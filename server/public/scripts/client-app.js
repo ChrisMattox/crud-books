@@ -7,6 +7,8 @@ $(document).ready(function () {
     $("#book-list").on('click', '.delete', deleteBook);
     // update a book
     $("#book-list").on('click', '.update', updateBook);
+    // search for genre
+    $("#genre-submit").on('click', getListBooks);
 });
 /**
  * Retrieve books from server and append to DOM
@@ -131,4 +133,20 @@ function appendBooks(books) {
     $el.append('<button class="update">Update</button>');
     $el.append('<button class="delete">Delete</button>');
   }
+}
+
+function getListBooks() {
+  var selectAGenre = $('#genre-dropdown').val();
+  console.log(selectAGenre);
+  $.ajax({
+    type: 'GET',
+    url: '/books/genre/' + selectAGenre,
+    success: function(books) {
+      appendBooks(books);
+    },
+    error: function() {
+      console.log('Database error');
+    }
+
+  })
 }
