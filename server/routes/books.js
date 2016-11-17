@@ -3,37 +3,6 @@ var router = express.Router();
 var pg = require('pg');
 var connectionString = 'postgres://localhost:5432/sigma';
 
-
-router.get('/genre/:selectAGenre', function(req, res) {
-  console.log('get request STEVE!!');
-  var sendGenre = req.params.selectAGenre;
-  // get books from DB
-  pg.connect(connectionString, function(err, client, done) {
-    if(err) {
-      console.log('connection error: ', err);
-      res.sendStatus(500);
-    }
-
-    client.query('SELECT * FROM books WHERE genre =$1',
-    [sendGenre],
-    function(err, result) {
-      done(); // close the connection.
-
-      // console.log('the client!:', client);
-
-      if(err) {
-        console.log('select query error: ', err);
-        res.sendStatus(500);
-      }
-      res.send(result.rows);
-
-    });
-
-  });
-});
-
-
-
 router.get('/', function(req, res) {
   console.log('get request generic');
   // get books from DB
@@ -141,7 +110,33 @@ router.put('/:id', function(req, res) {
 
 }); // end route
 
+router.get('/genre/:selectAGenre', function(req, res) {
+  console.log('get genre request!!');
+  var sendGenre = req.params.selectAGenre;
+  // get books from DB
+  pg.connect(connectionString, function(err, client, done) {
+    if(err) {
+      console.log('connection error: ', err);
+      res.sendStatus(500);
+    }
 
+    client.query('SELECT * FROM books WHERE genre =$1',
+    [sendGenre],
+    function(err, result) {
+      done(); // close the connection.
+
+      // console.log('the client!:', client);
+
+      if(err) {
+        console.log('select query error: ', err);
+        res.sendStatus(500);
+      }
+      res.send(result.rows);
+
+    });
+
+  });
+});
 
 
 
